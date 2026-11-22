@@ -1,0 +1,293 @@
+@import "tailwindcss";
+
+/* El modo oscuro se activa con data-theme="dark" en <html> (ver ThemeToggle),
+   no con prefers-color-scheme: así funcionan las clases dark:* de Tailwind. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+@theme {
+  /* Tipografía — --font-inter lo define next/font en layout.tsx */
+  --font-sans:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-body:    var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  --font-weight-normal: 400;
+  --font-weight-bold:   700;
+
+  --font-size-sm:  0.750rem;
+  --font-size-base: 1rem;
+  --font-size-xl:  1.333rem;
+  --font-size-2xl: 1.777rem;
+  --font-size-3xl: 2.369rem;
+  --font-size-4xl: 3.158rem;
+  --font-size-5xl: 4.210rem;
+
+  /* Escala de marca — verde Tijuana. 600 es el color de botones
+     (texto blanco 5.3:1); 700 es su hover (7.3:1). */
+  --color-brand-50:  #f0f8f0;
+  --color-brand-100: #dcefdd;
+  --color-brand-200: #b9dfbd;
+  --color-brand-300: #8cc995;
+  --color-brand-400: #5cae69;
+  --color-brand-500: #3f924c;
+  --color-brand-600: #2e7a39;
+  --color-brand-700: #24622e;
+  --color-brand-800: #1d4d25;
+  --color-brand-900: #163b1d;
+  --color-brand-950: #0a1f0e;
+
+  /* Tokens semánticos de marca (cambian con el tema, ver [data-theme="dark"]) */
+  --color-brand-soft:        #e4f2e5;  /* fondo tenue: íconos, etiquetas, avisos */
+  --color-brand-soft-border: #bfdcc3;
+  --color-brand-strong:      #23692f;  /* texto de acento sobre superficies (6.7:1) */
+
+  /* Superficies — claro: blanco con un toque verde-gris, sin el tono crema */
+  --color-surface:    #ffffff;   /* tarjetas */
+  --color-surface-2:  #f5f7f2;   /* fondo de página, campos */
+  --color-surface-3:  #e9ede4;   /* pistas, chips, hover */
+
+  /* Texto — todos ≥ 4.5:1 sobre las tres superficies */
+  --color-content:    #141c16;
+  --color-content-2:  #3b463e;
+  --color-content-3:  #5f6b62;
+  --color-border:     #d9dfd2;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 106.25%; /* base 17px — ligeramente más grande */
+  scroll-behavior: smooth;
+  scroll-padding-top: 64px; /* compensa el navbar fijo */
+}
+
+html {
+  color-scheme: light;   /* controles nativos (select, scroll) en claro */
+}
+
+body {
+  background-color: var(--color-surface-2);
+  color: var(--color-content);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-brand-200);
+  color: var(--color-content);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+/* Modo oscuro — carbón con matiz verde, coherente con la marca.
+   Las tarjetas (surface) son más claras que el fondo (surface-2) para dar
+   sensación de elevación, igual que en el modo claro. */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-surface:    #161d18;
+  --color-surface-2:  #0e130f;
+  --color-surface-3:  #212a24;
+
+  --color-content:    #e9eee9;
+  --color-content-2:  #b6c1b9;
+  --color-content-3:  #8d9a91;
+  --color-border:     #2d3830;
+
+  --color-brand-soft:        #1b3321;
+  --color-brand-soft-border: #2c4a33;
+  --color-brand-strong:      #7dd08a;
+}
+
+[data-theme="dark"] ::selection {
+  background-color: var(--color-brand-800);
+}
+
+/* Transición suave al cambiar de tema. ThemeToggle agrega .theme-transition
+   a <html> solo durante el cambio, para no pisar las transiciones de cada
+   componente (paneles, barras, etc.) el resto del tiempo. */
+.theme-transition,
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
+  transition:
+    background-color 0.35s ease,
+    border-color     0.35s ease,
+    color            0.2s  ease,
+    fill             0.2s  ease !important;
+}
+
+/* Tamaños base de encabezados dentro de @layer base: así las clases de
+   Tailwind (text-sm, text-xl…) pueden sobrescribirlos. */
+@layer base {
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+  }
+
+  h1 { font-size: 4.210rem; }  /* 67.36px */
+  h2 { font-size: 3.158rem; }  /* 50.56px */
+  h3 { font-size: 2.369rem; }  /* 37.92px */
+  h4 { font-size: 1.777rem; }  /* 28.48px */
+  h5 { font-size: 1.333rem; }  /* 21.28px */
+  small { font-size: 0.750rem; } /* 12px */
+}
+
+/* Impresión / "Exportar PDF": solo el contenido del análisis */
+@media print {
+  .no-print { display: none !important; }
+  body, [data-theme="dark"] body { background: #fff !important; color: #000 !important; }
+  .print-break-avoid { break-inside: avoid; }
+}
+
+/* ─── Keyframes ──────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-left {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+
+@keyframes fade-right {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to   { opacity: 1; transform: scale(1);    }
+}
+
+/* ─── Clases de animación ────────────────────────────── */
+.animate-fade-up   { animation: fade-up   0.55s cubic-bezier(.22,.68,0,1.2) both; }
+.animate-fade-in   { animation: fade-in   0.5s  ease both; }
+.animate-fade-left { animation: fade-left 0.55s cubic-bezier(.22,.68,0,1.2) both; }
+.animate-fade-right{ animation: fade-right 0.55s cubic-bezier(.22,.68,0,1.2) both; }
+.animate-scale-in  { animation: scale-in  0.5s  cubic-bezier(.22,.68,0,1.2) both; }
+
+/* Estado inicial oculto (antes de que Intersection Observer lo active) */
+.anim-hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.55s ease, transform 0.55s cubic-bezier(.22,.68,0,1.2);
+}
+.anim-hidden.anim-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Quien prefiere menos movimiento ve el contenido de inmediato */
+@media (prefers-reduced-motion: reduce) {
+  .anim-hidden { opacity: 1; transform: none; transition: none; }
+  .animate-fade-up, .animate-fade-in, .animate-fade-left,
+  .animate-fade-right, .animate-scale-in { animation: none; }
+}
+
+/* Delays escalonados para listas de cards */
+.anim-delay-1 { animation-delay: 0.05s; transition-delay: 0.05s; }
+.anim-delay-2 { animation-delay: 0.12s; transition-delay: 0.12s; }
+.anim-delay-3 { animation-delay: 0.19s; transition-delay: 0.19s; }
+.anim-delay-4 { animation-delay: 0.26s; transition-delay: 0.26s; }
+.anim-delay-5 { animation-delay: 0.33s; transition-delay: 0.33s; }
+.anim-delay-6 { animation-delay: 0.40s; transition-delay: 0.40s; }
+
+/* ─── Landing: aparición escalonada de hijos ─────────── */
+/* El contenedor usa useInView (anim-visible); cada hijo .revelar define --i */
+.revelar {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(.22,.68,0,1.2);
+  transition-delay: calc(var(--i, 0) * 90ms);
+}
+.anim-visible .revelar { opacity: 1; transform: none; }
+
+/* Línea que se dibuja de izquierda a derecha (o de arriba a abajo) */
+.linea-progreso { transform: scaleX(0); transform-origin: left; transition: transform 1.4s cubic-bezier(.65,0,.35,1) 0.2s; }
+.linea-progreso-v { transform: scaleY(0); transform-origin: top; transition: transform 1.4s cubic-bezier(.65,0,.35,1) 0.2s; }
+.anim-visible .linea-progreso { transform: scaleX(1); }
+.anim-visible .linea-progreso-v { transform: scaleY(1); }
+
+@keyframes flotar {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50%      { transform: translate(18px, -22px) scale(1.06); }
+}
+@keyframes flotar-suave {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes pulso-anillo {
+  0%   { transform: scale(0.4); opacity: 0.7; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes aparecer-pop {
+  0%   { transform: scale(0); opacity: 0; }
+  70%  { transform: scale(1.15); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes desplazar-franja {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes brillo {
+  from { background-position: -200% 0; }
+  to   { background-position: 200% 0; }
+}
+@keyframes cursor-parpadeo { 50% { opacity: 0; } }
+@keyframes palabra-entra {
+  from { opacity: 0; transform: translateY(60%); filter: blur(4px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+@keyframes llenar-barra { from { width: 0; } }
+
+.animar-flotar       { animation: flotar 14s ease-in-out infinite; }
+.animar-flotar-suave { animation: flotar-suave 5s ease-in-out infinite; }
+.animar-pulso        { animation: pulso-anillo 2.6s ease-out infinite; }
+.animar-pop          { animation: aparecer-pop 0.45s cubic-bezier(.22,.68,0,1.4) both; }
+.animar-franja       { animation: desplazar-franja 40s linear infinite; }
+.animar-franja:hover { animation-play-state: paused; }
+.animar-palabra      { animation: palabra-entra 0.5s cubic-bezier(.22,.68,0,1.2) both; }
+.animar-barra        { animation: llenar-barra 0.9s cubic-bezier(.22,.68,0,1) both; }
+.cursor-escritura::after {
+  content: "";
+  display: inline-block;
+  width: 1.5px;
+  height: 1em;
+  margin-left: 1px;
+  vertical-align: -0.15em;
+  background: currentColor;
+  animation: cursor-parpadeo 1s steps(1) infinite;
+}
+.esqueleto-brillo {
+  background: linear-gradient(90deg, var(--color-surface-3) 25%, var(--color-surface-2) 50%, var(--color-surface-3) 75%);
+  background-size: 200% 100%;
+  animation: brillo 1.4s linear infinite;
+}
+
+/* Tarjetas que se elevan al pasar el mouse */
+.tarjeta-elevable { transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease; }
+.tarjeta-elevable:hover { transform: translateY(-4px); box-shadow: 0 12px 28px -12px rgb(0 0 0 / 0.18); }
+
+@media (prefers-reduced-motion: reduce) {
+  .revelar, .linea-progreso, .linea-progreso-v { opacity: 1; transform: none; transition: none; }
+  .animar-flotar, .animar-flotar-suave, .animar-pulso, .animar-franja, .esqueleto-brillo,
+  .animar-pop, .animar-palabra, .animar-barra { animation: none; }
+  .animar-pulso { opacity: 0; }
+  .cursor-escritura::after { animation: none; }
+  .tarjeta-elevable:hover { transform: none; }
+}

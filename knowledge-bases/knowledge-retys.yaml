@@ -1,0 +1,125 @@
+name: "retys-baja-california"
+display_name: "RETyS — Registro Estatal de Trámites y Servicios de Baja California"
+description: >
+  Base de conocimiento oficial del Registro Estatal de Trámites y Servicios (RETyS)
+  de Baja California. Contiene 242 fichas de trámites y servicios de dependencias
+  estatales organizados en 12 grupos. Cubre: apertura de establecimientos, permisos
+  sanitarios, licencias de construcción, autorizaciones ambientales, registros
+  de transporte, apoyos sociales y más.
+
+  Dependencias incluidas:
+  - COEPRIS (Comisión Estatal para la Protección contra Riesgos Sanitarios)
+  - DRPPC (Dirección de Regulación, Proyectos y Protección Civil)
+  - SADER (Secretaría de Agricultura, Ganadería, Pesca y Acuacultura)
+  - SEI (Secretaría de Economía e Innovación)
+  - SH (Secretaría de Hacienda)
+  - SIDURT (Secretaría de Infraestructura, Desarrollo Urbano y Territorial)
+  - SMADS (Secretaría de Desarrollo Social y Sustentable)
+  - CEJUM (Centro Estatal de Justicia para las Mujeres)
+  - OM (Oficina del Municipio)
+
+# ── Fuente de documentos ────────────────────────────────────────────────────────
+source:
+  type: "directory"
+  path: "../knowledge RETYS"
+  file_pattern: "**/*.txt"
+  recursive: true
+  encoding: "utf-8"
+
+# ── Configuración de indexación ─────────────────────────────────────────────────
+indexing:
+  chunk_size: 800
+  chunk_overlap: 100
+  metadata_fields:
+    - "HOMOCLAVE"
+    - "ORGANISMO"
+    - "TRÁMITE"
+    - "MODALIDADES"
+    - "ÚLTIMA ACTUALIZACIÓN"
+
+# ── Instrucciones de uso para el agente ─────────────────────────────────────────
+usage_instructions: |
+  Cuando busques trámites para un negocio:
+
+  1. Identifica primero: giro, actividad, producto/servicio, municipio, establecimiento.
+  2. Busca por: nombre de actividad, sinónimos, tipo de permiso (licencia, aviso, registro,
+     autorización, inscripción, funcionamiento).
+  3. Para cada trámite encontrado registra:
+     - Nombre oficial y homoclave
+     - Dependencia responsable
+     - Descripción y sujeto obligado
+     - Requisitos y documentos
+     - Costo, plazo y vigencia
+     - Fundamento jurídico
+     - Oficina y municipio de atención
+  4. Clasifica cada trámite:
+     - CONFIRMADO: corresponde claramente al negocio
+     - POSIBLEMENTE APLICABLE: existe relación, pero requiere confirmación
+     - NO CONFIRMADO: información insuficiente para determinar aplicabilidad
+     - NO APLICABLE: la evidencia indica que no corresponde
+  5. NUNCA conviertas una coincidencia de palabras en una obligación legal confirmada.
+  6. Si un dato no aparece en RETyS, indica: "Información no localizada en RETyS."
+
+# ── Grupos de trámites por dependencia ─────────────────────────────────────────
+categories:
+  - id: "COEPRIS"
+    name: "Protección contra Riesgos Sanitarios"
+    description: >
+      Trámites sanitarios: avisos de funcionamiento para restaurantes, fondas,
+      cocinas económicas, purificadoras, carnicerías, tortillerías, panaderías,
+      tiendas de autoservicio, peluquerías, salones de belleza, spas, etc.
+    path: "knowledge RETYS/RETYS 1"
+    files_range: "RETYS 1 - RETYS 5"
+
+  - id: "DRPPC"
+    name: "Regulación, Proyectos y Protección Civil"
+    description: >
+      Licencias de construcción, permisos de uso de suelo, protección civil,
+      subdivisiones, fraccionamientos, ocupación de vía pública.
+    path: "knowledge RETYS/RETYS 5 - RETYS 6"
+
+  - id: "SADER"
+    name: "Agricultura, Ganadería, Pesca y Acuacultura"
+    description: >
+      Registros y permisos para actividades agrícolas, ganaderas, pesqueras
+      y de acuacultura en Baja California.
+    path: "knowledge RETYS/RETYS 7"
+
+  - id: "SEI"
+    name: "Economía e Innovación"
+    description: >
+      Apoyos a empresas, registros de actividad económica, promoción de inversión.
+    path: "knowledge RETYS/RETYS 7 - RETYS 12"
+
+  - id: "SH"
+    name: "Secretaría de Hacienda"
+    description: >
+      Registros fiscales estatales, pagos de derechos, trámites hacendarios.
+    path: "knowledge RETYS/RETYS 11 - RETYS 12"
+
+  - id: "SIDURT"
+    name: "Infraestructura, Desarrollo Urbano y Territorial"
+    description: >
+      Permisos de uso de suelo, alineamientos y números oficiales, subdivisiones,
+      autorizaciones de desarrollo urbano.
+    path: "knowledge RETYS/RETYS 10 - RETYS 11"
+
+  - id: "SMADS"
+    name: "Desarrollo Social y Sustentable"
+    description: >
+      Programas de apoyo social, registro de organizaciones, apoyos a grupos
+      vulnerables, permisos ambientales.
+    path: "knowledge RETYS/RETYS 10"
+
+  - id: "CEJUM"
+    name: "Centro Estatal de Justicia para las Mujeres"
+    description: >
+      Servicios y trámites de apoyo a mujeres en situación de violencia.
+    path: "knowledge RETYS/RETYS 1 - RETYS 3"
+
+  - id: "OM"
+    name: "Oficina del Municipio"
+    description: >
+      Trámites municipales: licencias de funcionamiento, uso de suelo municipal,
+      anuncios, ocupación de vía pública.
+    path: "knowledge RETYS/RETYS 7"

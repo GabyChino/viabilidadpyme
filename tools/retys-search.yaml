@@ -1,0 +1,138 @@
+name: "buscar_tramites_retys"
+display_name: "Buscar Trámites en RETyS"
+description: >
+  Busca en el Registro Estatal de Trámites y Servicios (RETyS) de Baja California
+  los trámites, permisos, licencias y autorizaciones aplicables a un giro comercial
+  específico. Retorna fichas oficiales con nombre, dependencia, requisitos, costo,
+  plazo y fundamento jurídico.
+
+# ── Esquema de entrada ──────────────────────────────────────────────────────────
+input_schema:
+  type: object
+  required:
+    - giro
+    - municipio
+  properties:
+    giro:
+      type: string
+      description: >
+        Nombre o descripción del giro comercial, actividad económica o tipo de negocio.
+        Ejemplos: "restaurante", "taquería", "purificadora de agua", "salón de belleza",
+        "tienda de abarrotes", "farmacia", "clínica dental", "taller mecánico".
+    municipio:
+      type: string
+      description: >
+        Municipio de Baja California donde operará el negocio.
+        Valores válidos: Tijuana, Mexicali, Ensenada, Tecate, Playas de Rosarito,
+        San Quintín. Default: Tijuana.
+      default: "Tijuana"
+    tipo_establecimiento:
+      type: string
+      description: >
+        Tipo de establecimiento físico. Ejemplos: local comercial, domicilio,
+        patio de maniobras, unidad móvil, establecimiento virtual.
+      default: "local comercial"
+    maneja_alimentos:
+      type: boolean
+      description: "Si el negocio prepara, vende o distribuye alimentos o bebidas."
+      default: false
+    maneja_bebidas_alcoholicas:
+      type: boolean
+      description: "Si el negocio vende o distribuye bebidas alcohólicas."
+      default: false
+    maneja_sustancias:
+      type: boolean
+      description: "Si el negocio maneja sustancias peligrosas o residuos especiales."
+      default: false
+    num_empleados:
+      type: string
+      description: "Rango aproximado de empleados: 1, 2-5, 6-15, 16-30, más de 30."
+      default: "1"
+    actividad_adicional:
+      type: string
+      description: >
+        Actividades especiales adicionales que podrían generar trámites extra.
+        Ejemplos: construcción, instalación de anuncios, importación, exportación,
+        servicio a domicilio, residuos médicos.
+
+# ── Esquema de salida ───────────────────────────────────────────────────────────
+output_schema:
+  type: object
+  properties:
+    tramites:
+      type: array
+      description: "Lista de trámites identificados en RETyS"
+      items:
+        type: object
+        properties:
+          nombre:
+            type: string
+            description: "Nombre oficial del trámite"
+          homoclave:
+            type: string
+            description: "Clave única del trámite en RETyS (ej: BC-COEPRIS-001)"
+          dependencia:
+            type: string
+            description: "Dependencia responsable del trámite"
+          descripcion:
+            type: string
+            description: "Descripción del trámite y cuándo aplica"
+          aplicabilidad:
+            type: string
+            enum: ["CONFIRMADO", "POSIBLEMENTE APLICABLE", "NO CONFIRMADO", "NO APLICABLE"]
+            description: "Nivel de aplicabilidad al negocio analizado"
+          razon_aplicabilidad:
+            type: string
+            description: "Explicación de por qué aplica o no aplica"
+          requisitos:
+            type: array
+            items:
+              type: string
+            description: "Lista de requisitos y documentos necesarios"
+          costo:
+            type: string
+            description: "Costo oficial del trámite (o 'Sin costo' / 'No especificado')"
+          plazo:
+            type: string
+            description: "Tiempo de resolución del trámite"
+          vigencia:
+            type: string
+            description: "Vigencia del permiso o trámite"
+          url_oficial:
+            type: string
+            description: "URL del trámite en RETyS"
+          municipio:
+            type: string
+            description: "Municipio donde aplica"
+    resumen:
+      type: object
+      properties:
+        total_identificados:
+          type: integer
+        confirmados:
+          type: integer
+        posiblemente_aplicables:
+          type: integer
+        requieren_validacion:
+          type: integer
+    advertencias:
+      type: array
+      items:
+        type: string
+      description: "Advertencias sobre información no verificable o que requiere confirmación"
+
+# ── Implementación ──────────────────────────────────────────────────────────────
+implementation:
+  type: "knowledge_search"
+  knowledge_base: "retys-baja-california"
+  search_strategy: "semantic"
+  max_results: 20
+  rerank: true
+  filters:
+    - field: "municipio"
+      operator: "contains"
+      value: "{{municipio}}"
+  post_processing:
+    - classify_applicability
+    - extract_structured_fields
+    - deduplicate_by_homoclave

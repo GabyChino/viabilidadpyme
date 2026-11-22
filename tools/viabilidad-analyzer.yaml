@@ -1,0 +1,250 @@
+name: "evaluar_viabilidad"
+display_name: "Evaluar Viabilidad Empresarial (10 criterios)"
+description: >
+  Aplica el Modelo Integrado de Evaluación de Viabilidad Empresarial para calcular
+  los 10 criterios de evaluación, el puntaje total (máximo 50 puntos) y la
+  clasificación de viabilidad de una idea de negocio en Tijuana, Baja California.
+  Cada criterio se evalúa de 1 (muy desfavorable) a 5 (muy favorable).
+
+# ── Los 10 criterios de evaluación ─────────────────────────────────────────────
+criteria:
+  - id: 1
+    nombre: "Regulaciones y Legalidad"
+    descripcion: >
+      Evalúa permisos, licencias, autorizaciones, registros, avisos, trámites,
+      costos regulatorios, plazos, complejidad y requisitos sanitarios, fiscales,
+      municipales, estatales, federales y binacionales.
+    fuentes_prioritarias:
+      - "RETyS (Registro Estatal de Trámites y Servicios)"
+      - "Ayuntamiento de Tijuana"
+      - "Gobierno de Baja California"
+      - "SAT (Servicio de Administración Tributaria)"
+      - "COFEPRIS"
+      - "DOF (Diario Oficial de la Federación)"
+    escala:
+      "5": "Requisitos claramente identificados, cumplimiento razonablemente accesible, sin obstáculos regulatorios importantes."
+      "4": "Requisitos manejables, aunque existen trámites o costos relevantes."
+      "3": "Existe complejidad o incertidumbre regulatoria moderada."
+      "2": "Existen obstáculos importantes, permisos complejos o costos regulatorios relevantes."
+      "1": "La actividad presenta impedimentos legales importantes o no puede operar legalmente bajo las condiciones actuales."
+
+  - id: 2
+    nombre: "Problema y Necesidad del Mercado"
+    descripcion: >
+      Evalúa existencia del problema, intensidad, frecuencia, número de clientes
+      potenciales afectados, alternativas actuales y evidencia de demanda.
+    escala:
+      "5": "Problema claro, frecuente y respaldado por evidencia."
+      "4": "Necesidad clara con evidencia favorable."
+      "3": "Necesidad plausible pero evidencia limitada o mixta."
+      "2": "Necesidad débil o evidencia de demanda limitada."
+      "1": "No existe evidencia suficiente de un problema relevante o existe evidencia contraria."
+
+  - id: 3
+    nombre: "Propuesta de Valor y Diferenciación"
+    descripcion: >
+      Evalúa beneficio, diferenciación, precio, calidad, experiencia, conveniencia,
+      servicio, tecnología, ubicación y barreras frente a alternativas.
+    escala:
+      "5": "Diferenciación clara y difícilmente sustituible, respaldada por evidencia."
+      "4": "Diferenciación clara frente a alternativas."
+      "3": "Propuesta entendible pero con diferenciación limitada o incierta."
+      "2": "Oferta fácilmente sustituible."
+      "1": "No existe una propuesta de valor claramente identificable."
+
+  - id: 4
+    nombre: "Demografía y Demanda de Mercado"
+    descripcion: >
+      Evalúa tamaño del mercado, población, segmento objetivo, crecimiento,
+      concentración, ingresos, empleo, ubicación y comportamiento relevante.
+    nota: "No confundas población total con clientes potenciales."
+    escala:
+      "5": "Mercado objetivo claramente identificado y respaldado por indicadores favorables."
+      "4": "Mercado atractivo con evidencia suficiente."
+      "3": "Mercado potencial pero con incertidumbres relevantes."
+      "2": "Mercado limitado o evidencia desfavorable."
+      "1": "Mercado claramente insuficiente para la propuesta."
+
+  - id: 5
+    nombre: "Actividad Económica Similar"
+    descripcion: >
+      Evalúa competencia, concentración, oferta, precios, saturación aparente,
+      formatos y diferenciación.
+    nota: "La competencia puede indicar existencia de mercado O presión competitiva. No usar 'muchos competidores = 1' automáticamente."
+    escala:
+      "5": "Competencia existente demuestra actividad de mercado y existen espacios claros de diferenciación."
+      "4": "Competencia manejable y mercado suficientemente desarrollado."
+      "3": "Competencia significativa o información mixta."
+      "2": "Alta presión competitiva con poca diferenciación observable."
+      "1": "Competencia intensa y ausencia de una ventaja identificable."
+
+  - id: 6
+    nombre: "Infraestructura y Recursos Clave"
+    descripcion: >
+      Evalúa ubicación, local, transporte, proveedores, tecnología, equipamiento,
+      personal, logística, servicios y conectividad.
+    escala:
+      "5": "Recursos disponibles y fácilmente accesibles."
+      "4": "Recursos adecuados con algunas necesidades de inversión."
+      "3": "Recursos disponibles pero con limitaciones."
+      "2": "Dependencia importante de recursos difíciles de obtener."
+      "1": "Faltan recursos esenciales o existen obstáculos graves."
+
+  - id: 7
+    nombre: "Viabilidad Financiera"
+    descripcion: >
+      Evalúa (cuando existan datos): inversión inicial, costos, precio, margen,
+      ventas, punto de equilibrio, capital de trabajo, flujo de efectivo y
+      recuperación de inversión.
+    nota: "Si no existen datos financieros suficientes, señalar qué falta y usar puntuación provisional."
+    escala:
+      "5": "Economía del negocio claramente favorable y respaldada por datos."
+      "4": "Viabilidad financiera favorable con riesgos manejables."
+      "3": "Viabilidad posible pero depende de variables aún no comprobadas."
+      "2": "Márgenes, inversión o punto de equilibrio presentan dificultades importantes."
+      "1": "Los números disponibles muestran inviabilidad financiera."
+
+  - id: 8
+    nombre: "Equipo y Gestión"
+    descripcion: >
+      Evalúa experiencia, conocimientos, liderazgo, operación, administración,
+      personal, contratación y dependencia del fundador.
+    nota: "No especular sobre capacidades del usuario. Si no hay datos, usar puntuación neutral."
+    escala:
+      "5": "Capacidades claramente alineadas con las necesidades del negocio."
+      "4": "Capacidades adecuadas con brechas menores."
+      "3": "Capacidades parcialmente conocidas o con brechas relevantes."
+      "2": "Existen brechas importantes."
+      "1": "Faltan capacidades críticas sin plan razonable para cubrirlas."
+
+  - id: 9
+    nombre: "Sostenibilidad del Negocio"
+    descripcion: >
+      Evalúa recurrencia, retención, dependencia de proveedores, dependencia
+      tecnológica, estabilidad de demanda, riesgos y capacidad de adaptación.
+    escala:
+      "5": "Modelo resistente y con mecanismos claros de sostenibilidad."
+      "4": "Sostenibilidad favorable con riesgos manejables."
+      "3": "Sostenibilidad posible pero con incertidumbres."
+      "2": "Dependencias o riesgos importantes."
+      "1": "Modelo altamente vulnerable o difícil de sostener."
+
+  - id: 10
+    nombre: "Estrategia de Crecimiento"
+    descripcion: >
+      Evalúa escalabilidad, nuevos productos, nuevas ubicaciones, canales digitales,
+      alianzas, expansión regional, nacional o binacional.
+    escala:
+      "5": "Existe una vía clara y realista de crecimiento."
+      "4": "Existen varias posibilidades razonables."
+      "3": "Crecimiento posible pero depende de validaciones."
+      "2": "Escalabilidad limitada."
+      "1": "Modelo difícil de ampliar o altamente dependiente de condiciones específicas."
+
+# ── Escala general ──────────────────────────────────────────────────────────────
+scoring:
+  per_criterion:
+    min: 1
+    max: 5
+  total:
+    min: 10
+    max: 50
+  classification:
+    alta_viabilidad:
+      range: "45-50"
+      label: "Alta viabilidad estimada"
+    viabilidad_mejorable:
+      range: "35-44"
+      label: "Viabilidad con mejoras sugeridas"
+    requiere_ajustes:
+      range: "0-34"
+      label: "Requiere ajustes significativos"
+
+# ── Reglas de puntuación ────────────────────────────────────────────────────────
+scoring_rules:
+  - "Cuando la evidencia sea insuficiente, usar 3 como punto neutral/provisional."
+  - "Indicar 'Puntuación provisional: requiere validación.' cuando aplique."
+  - "Evitar doble conteo: un mismo hecho no debe penalizar múltiples criterios innecesariamente."
+  - "No asignar puntuación 1 solo por desconocimiento; ni 5 por optimismo."
+  - "Si existe una barrera legal que impide la actividad, señalarlo independientemente del total."
+  - "Dar mayor peso a datos específicos de Tijuana que a datos estatales o nacionales."
+
+# ── Esquema de entrada ──────────────────────────────────────────────────────────
+input_schema:
+  type: object
+  required:
+    - datos_negocio
+  properties:
+    datos_negocio:
+      type: object
+      description: "Datos del formulario de viabilidad del negocio"
+      properties:
+        nombreNegocio:
+          type: string
+        giroComercial:
+          type: string
+        descripcionNegocio:
+          type: string
+        modeloNegocio:
+          type: string
+        municipio:
+          type: string
+        colonia:
+          type: string
+        tieneLocal:
+          type: string
+        capitalDisponible:
+          type: string
+        requiereFinanciamiento:
+          type: boolean
+        ventasMensualesEstimadas:
+          type: string
+        numEmpleados:
+          type: string
+        experienciaPrevia:
+          type: string
+        yaOpera:
+          type: boolean
+    tramites_retys:
+      type: array
+      description: "Resultado previo de búsqueda en RETyS (opcional, mejora la evaluación)"
+    contexto_adicional:
+      type: string
+      description: "Información adicional sobre el negocio o el mercado local"
+
+# ── Esquema de salida ───────────────────────────────────────────────────────────
+output_schema:
+  type: object
+  properties:
+    criterios:
+      type: array
+      items:
+        type: object
+        properties:
+          id: { type: integer }
+          nombre: { type: string }
+          descripcion: { type: string, description: "Max 20 palabras" }
+          puntaje: { type: integer, minimum: 1, maximum: 5 }
+          evidencia_favorable: { type: array, items: { type: string } }
+          evidencia_desfavorable: { type: array, items: { type: string } }
+          incertidumbre: { type: string }
+          provisional: { type: boolean }
+    puntaje_total:
+      type: integer
+      minimum: 10
+      maximum: 50
+    clasificacion:
+      type: string
+      enum: ["Alta viabilidad estimada", "Viabilidad con mejoras sugeridas", "Requiere ajustes significativos"]
+    nivel_confianza:
+      type: string
+      enum: ["Alta confianza", "Confianza media", "Confianza limitada"]
+    factores_que_impulsan:
+      type: array
+      items: { type: string }
+    factores_que_limitan:
+      type: array
+      items: { type: string }
+    nota_legalidad:
+      type: string
+      description: "Alertas legales críticas si las hay (ej: actividad requiere permiso bloqueante)"
