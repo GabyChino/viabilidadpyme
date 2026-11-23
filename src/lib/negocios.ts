@@ -16,11 +16,12 @@ function normalizar(s: string): string {
 // clases de actividad SCIAN del DENUE (en español, ya sin acentos). El orden importa.
 const GIRO_POR_CATEGORIA: [RegExp, string][] = [
   [/restaurant|cafe|coffee|bakery|meal_|fast_food|food_court|taqueria|bar_and_grill|panader|restaurante|cafeteria|alimentos preparados|antojitos|fuentes de sodas/, "restaurante_cafeteria"],
+  // Antes que abarrotes: el DENUE clasifica "Farmacias con/sin minisúper"
+  [/pharmacy|drugstore|chemist|farmacia|farmaceutic/, "farmacia"],
   [/grocery|convenience|supermarket|abarrote|minisuper|deli\b|autoservicio|ultramarinos/, "tienda_abarrotes"],
-  [/liquor|butcher|beverage|food_store|market|carnicer|tortill|panifica|frutas|verduras|bebidas/, "comercio_alimentos"],
+  [/liquor|butcher|beverage|food_store|market|carnicer|tortill|panifica|frutas|verduras|bebidas|vinos|licores|cerveza|dulces|reposteria/, "comercio_alimentos"],
   [/clothing|clothes|shoe|boutique|ropa|zapater|calzado/, "ropa_calzado"],
   [/hardware|doityourself|building_materials|home_improvement|ferreter|tlapaler/, "ferreteria"],
-  [/pharmacy|drugstore|chemist|farmacia|farmaceutic/, "farmacia"],
   [/stationery|book_store|books|office_supplies|copyshop|papeler/, "papeleria"],
   [/beauty|hair|barber|nail|spa\b|salon|cosmetics|estetica|peluquer/, "salon_belleza"],
   [/car_repair|automovil|automotri|tyres|mechanic|car_wash|taller|reparacion mecanica|llant/, "taller_mecanico"],
@@ -29,7 +30,7 @@ const GIRO_POR_CATEGORIA: [RegExp, string][] = [
   [/school|education|tutoring|language|academ|escuela|educacion|ensenanza/, "educacion"],
   [/lodging|hotel|motel|hostel|guest_house|hospedaje|alojamiento/, "turismo_hospedaje"],
   [/software|it_|computer|electronics_repair|web\b|computo|informatica/, "servicios_ti"],
-  [/lawyer|accounting|consult|insurance|real_estate|notary|abogad|contador|contabilidad|bufete|juridic/, "consultoria"],
+  [/lawyer|accounting|consulting|consultor(?!io)|insurance|real_estate|notary|abogad|contador|contabilidad|bufete|juridic/, "consultoria"],
   [/moving|logistics|courier|transport|trucking|autotransporte|mensajeria|paqueteria/, "transporte"],
   [/contractor|construction|electrician|plumber|construccion|edificacion/, "construccion"],
 ];

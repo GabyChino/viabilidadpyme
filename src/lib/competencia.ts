@@ -102,6 +102,15 @@ function contar<T>(items: T[], clave: (x: T) => string): { valor: string; cantid
   return [...conteo].map(([valor, cantidad]) => ({ valor, cantidad })).sort((a, b) => b.cantidad - a.cantidad);
 }
 
+function normalizar(s: string): string {
+  return s.toLowerCase().normalize("NFD").replace(/[^a-z0-9]/g, "");
+}
+
+function mismoNombre(a: string, b: string): boolean {
+  const [x, y] = [normalizar(a), normalizar(b)];
+  return x.length > 0 && y.length > 0 && (x.startsWith(y) || y.startsWith(x));
+}
+
 /** Con el DENUE: todos los establecimientos del radio cuya clase SCIAN corresponde al mismo giro. */
 async function competenciaDenue(giro: string, centro: Centro, propio: NegocioPropio): Promise<CompetenciaZona> {
   const todos = await denueEnRadio(centro.lat, centro.lng, RADIO_M);
@@ -110,7 +119,8 @@ async function competenciaDenue(giro: string, centro: Centro, propio: NegocioPro
     .map((e) => resultadoDesdeDenue(e).negocio)
     .filter((n) => n.id !== propio?.id && n.lat !== undefined && n.lng !== undefined)
     // Un negocio elegido en OSM no tiene id del DENUE: se excluye si está en el mismo punto
-    .filter((n) => !(propio && n.nombre.toLowerCase() === propio.nombre.toLowerCase() && distanciaMetros(n.lat!, n.lng!, centro.lat, centro.lng) < 60));
+    // y su nombre coincide (el DENUE suele agregar la sucursal: "Farmacias Roma Cuauhtemoc")
+    .filter((n) => !(propio && mismoNombre(n.nombre, propio.nombre) && distanciaMetros(n.lat!, n.lng!, centro.lat, centro.lng) < 60));
 
   const negocios: (Cercano & { tamano: string })[] = similares.map((n) => ({
     nombre: n.nombre,

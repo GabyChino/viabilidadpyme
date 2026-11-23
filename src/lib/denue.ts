@@ -50,8 +50,13 @@ async function consultarDenue(ruta: string, timeoutMs = 15000): Promise<Establec
     signal: AbortSignal.timeout(timeoutMs),
   });
   if (!res.ok) throw new Error(`DENUE respondió ${res.status}`);
-  // Sin resultados, la API puede responder texto en vez de un arreglo JSON
+  // Sin resultados, la API puede responder texto en vez de un arreglo JSON.
+  // Un token inválido también llega con HTTP 200 ("No Autorizado, utilice una
+  // clave valida"): debe ser un error para que se use OpenStreetMap, no "0 negocios".
   const texto = await res.text();
+  if (/no autorizado|clave v[aá]lida/i.test(texto)) {
+    throw new Error("DENUE rechazó el token: revisa INEGI_DENUE_TOKEN");
+  }
   try {
     const datos: unknown = JSON.parse(texto);
     return Array.isArray(datos) ? (datos as EstablecimientoDenue[]).filter((e) => e && e.Id) : [];

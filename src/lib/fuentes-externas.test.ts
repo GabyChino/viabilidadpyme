@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { empleadosDesdeEstrato, esDeTijuana, resultadoDesdeDenue } from "@/lib/denue";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { buscarDenuePorNombre, empleadosDesdeEstrato, esDeTijuana, resultadoDesdeDenue } from "@/lib/denue";
 import { buscarAnioFundacion } from "@/lib/investigacion";
 import { conCache } from "@/lib/cache";
 
@@ -58,6 +58,38 @@ describe("DENUE", () => {
     [undefined, undefined],
   ])("estrato %s → %s", (estrato, esperado) => {
     expect(empleadosDesdeEstrato(estrato)).toBe(esperado);
+  });
+});
+
+describe("respuestas de la API del DENUE", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
+  const responder = (cuerpo: string) =>
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(cuerpo, { status: 200 })));
+
+  it("un token rechazado es un error (para usar OpenStreetMap), no cero resultados", async () => {
+    vi.stubEnv("INEGI_DENUE_TOKEN", "token-invalido");
+    responder("No Autorizado, utilice una clave valida. ");
+    await expect(buscarDenuePorNombre("farmacia")).rejects.toThrow(/token/);
+  });
+
+  it("una respuesta sin resultados en texto da una lista vacía", async () => {
+    vi.stubEnv("INEGI_DENUE_TOKEN", "token-valido");
+    responder("No se encontraron resultados");
+    await expect(buscarDenuePorNombre("zzzz")).resolves.toEqual([]);
+  });
+
+  it("solo devuelve negocios de Tijuana", async () => {
+    vi.stubEnv("INEGI_DENUE_TOKEN", "token-valido");
+    responder(JSON.stringify([
+      { Id: "1", Nombre: "FARMACIA A", Ubicacion: "TIJUANA, Tijuana, BAJA CALIFORNIA" },
+      { Id: "2", Nombre: "FARMACIA B", Ubicacion: "MEXICALI, Mexicali, BAJA CALIFORNIA" },
+    ]));
+    const resultados = await buscarDenuePorNombre("farmacia");
+    expect(resultados.map((r) => r.negocio.id)).toEqual(["denue/1"]);
   });
 });
 

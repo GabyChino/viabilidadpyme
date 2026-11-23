@@ -26,7 +26,10 @@ async function cuantificar(actividad, estrato) {
   const res = await fetch(url, { signal: AbortSignal.timeout(30000) });
   if (!res.ok) throw new Error(`DENUE respondió ${res.status}`);
   const datos = await res.json();
-  return datos.reduce((suma, fila) => suma + Number(fila.Total ?? 0), 0);
+  // Con actividad 0 la API devuelve el desglose por sector, subsector, rama y clase:
+  // sumar todo contaría cada negocio varias veces. Solo se suman los sectores (2 dígitos).
+  const filas = actividad === 0 ? datos.filter((f) => /^\d{2}$/.test(f.AE)) : datos;
+  return filas.reduce((suma, fila) => suma + Number(fila.Total ?? 0), 0);
 }
 
 const total = await cuantificar(0, 0);

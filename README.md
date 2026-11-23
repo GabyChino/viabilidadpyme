@@ -2,6 +2,8 @@
 
 Aplicación web que evalúa la viabilidad de ideas de negocio para PYMES en Tijuana, Baja California, con el modelo de **10 criterios / 50 puntos** y los trámites del **RETyS** (Registro Estatal de Trámites y Servicios de Baja California). El análisis lo genera un agente de **IBM watsonx Orchestrate**.
 
+📄 **[Acta de constitución del proyecto](ACTA-CONSTITUCION.md)**: objetivos, justificación, hitos, presupuesto, interesados y sponsor.
+
 **Stack:** Next.js 16 (App Router) · React 19 · TypeScript · Tailwind CSS 4 · React Hook Form + Zod
 
 ## Puesta en marcha

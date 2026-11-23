@@ -20,8 +20,19 @@ describe("sugerirGiro", () => {
     ["Autotransporte local de carga general", "transporte"],
     ["Servicios de contabilidad y auditoría", "consultoria"],
     ["Edificación de vivienda unifamiliar", "construccion"],
+    // Clases reales del DENUE en Tijuana que antes se clasificaban mal
+    ["Farmacias sin minisúper", "farmacia"],
+    ["Farmacias con minisúper", "farmacia"],
+    ["Comercio al por menor en minisupers", "tienda_abarrotes"],
+    ["Comercio al por menor de vinos y licores", "comercio_alimentos"],
+    ["Servicios de consultoría en administración", "consultoria"],
   ])("%s → %s", (categoria, giro) => {
     expect(sugerirGiro(categoria)).toBe(giro);
+  });
+
+  it("no confunde consultorios de salud con consultoría de negocios", () => {
+    expect(sugerirGiro("Consultorios dentales del sector privado")).toBeUndefined();
+    expect(sugerirGiro("Consultorios de medicina general del sector privado")).toBeUndefined();
   });
 
   it("no inventa un giro sin palabras clave", () => {
